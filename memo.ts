@@ -22,26 +22,29 @@ type Result = {
 // メモ用変数の定義
 const memo = new Map<string, Result>();
 
-function knapsack(tmpID: number, amount: number): Result {
+function knapsack(currentItemID: number, amount: number): Result {
   // メモのチェック
-  const key = `${tmpID}-${amount}`;
+  const key = `${currentItemID}-${amount}`;
   if (memo.has(key)) {
     return memo.get(key)!;
   }
-  if (tmpID >= bagages.length) {
+  if (currentItemID >= bagages.length) {
     return { value: 0, ids: [] };
   }
 
   // その荷物を入れない場合
-  const noPut = knapsack(tmpID + 1, amount);
+  const noPut = knapsack(currentItemID + 1, amount);
 
   // その荷物を入れる場合
   let put: Result = { value: -1, ids: [] };
-  if (bagages[tmpID].weight <= amount) {
-    const next = knapsack(tmpID + 1, amount - bagages[tmpID].weight);
+  if (bagages[currentItemID].weight <= amount) {
+    const next = knapsack(
+      currentItemID + 1,
+      amount - bagages[currentItemID].weight
+    );
     put = {
-      value: next.value + bagages[tmpID].value,
-      ids: [bagages[tmpID].id, ...next.ids],
+      value: next.value + bagages[currentItemID].value,
+      ids: [bagages[currentItemID].id, ...next.ids],
     };
   }
 
